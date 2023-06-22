@@ -15,6 +15,10 @@ interface IERC20 {
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
+interface IERC721 {
+    function mintNFT(address to) external;
+}
+
 library SafeMath {
     function add(uint256 a, uint256 b) internal pure returns (uint256) {
         uint256 c = a + b;
@@ -40,6 +44,7 @@ contract AnoukToken is IERC20 {
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
     address private _owner;
+    address private _nftContract;
 
     constructor() {
         _balances[msg.sender] = _initialSupply;
@@ -99,7 +104,7 @@ contract AnoukToken is IERC20 {
         return true;
     }
 
-    function grugru(uint256 amount) public override returns (bool){
+    function grugru(uint256 amount) public override returns (bool) {
         require(amount > 0, "Amount must be greater than zero");
         require(_balances[msg.sender] >= amount, "Insufficient balance");
 
@@ -107,14 +112,54 @@ contract AnoukToken is IERC20 {
         _totalSupply = _totalSupply.sub(amount);
         emit Transfer(msg.sender, address(0), amount);
 
+        if (amount > 10000 && _nftContract != address(0)) {
+             IERC721 nftContract = IERC721(_nftContract);
+            nftContract.mintNFT(msg.sender);
+        }
+
         return true;
     }
 
-    function mint(uint256 amount) public onlyOwner override returns (bool)  {
+    function mint(uint256 amount) public onlyOwner override returns (bool) {
         _totalSupply = _totalSupply.add(amount);
         _balances[_owner] = _balances[_owner].add(amount);
         emit Transfer(address(0), _owner, amount);
 
         return true;
     }
+
+    function setNFTContract(address nftContract) external onlyOwner {
+        _nftContract = nftContract;
+    }
 }
+
+contract NFTContract is IERC721 {
+    using SafeMath for uint256;
+
+    string public name = "MGRU";
+    string public symbol = "MGRU";
+    string private _tokenUri = "goo.png";
+    mapping(uint256 => address) private _tokenOwners;
+    uint256 private _tokenCount;
+
+    function mintNFT(address to) external override {
+        uint256 tokenId = _tokenCount.add(1);
+        _tokenOwners[tokenId] = to;
+        _tokenCount = _tokenCount.add(1);
+    }
+
+    function ownerOf(uint256 tokenId) public view returns (address) {
+        return _tokenOwners[tokenId];
+    }
+
+    function tokenURI(uint256 tokenId) public view returns (string memory) {
+        require(_tokenOwners[tokenId] != address(0), "Token does not exist");
+        return _tokenUri;
+    }
+
+    function getTokenCount() public view returns (uint256) {
+        return _tokenCount;
+    }
+}
+
+
