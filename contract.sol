@@ -34,9 +34,9 @@ contract AnoukToken is IERC20 {
 
     string public name = "Anouk";
     string public symbol = "GRU";
-    uint8 public decimals = 9;
-    uint256 public _totalSupply = 21000000000 * 10 ** uint256(decimals);
-    uint256 public _initialSupply = 21000000000 * 10 ** uint256(decimals);
+    uint8 public decimals = 0;
+    uint256 private _totalSupply = 21000000000 * 10 ** uint256(decimals);
+    uint256 private _initialSupply = 21000000000 * 10 ** uint256(decimals);
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
     address private _owner;
