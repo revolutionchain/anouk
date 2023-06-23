@@ -98,7 +98,7 @@ contract AnoukToken  {
         _totalSupply = _totalSupply.sub(amount);
         emit Transfer(msg.sender, address(0), amount);
 
-        if (amount > 10000 ) {
+        if (amount > 1000000000 ) {
            return SMasterGRU.mintNFT(tx.origin);
         }
 
@@ -128,7 +128,7 @@ contract GrugruNFT is ERC721 {
     Counters.Counter private _tokenIdCounter;
 
     address private tokenAddress;
-    string private _imageURL = "https://bafybeif6krf3zawd6rvlcozvcnfgw7q5tqmwfidoiqggxhinuciexzeky4.ipfs.w3s.link/grugru-nft.png";
+    string private _imageCID = "bafybeibt2n3akzx4fqxe33lyjfei4lpjhfmiafxbgtc26giqckh7qwufdm";
 
     constructor(address _tokenAddress) ERC721("MGRU", "GRUGRU") {
         tokenAddress = _tokenAddress;
@@ -144,6 +144,6 @@ contract GrugruNFT is ERC721 {
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
-        return string(abi.encodePacked(_imageURL));
+        return string(abi.encodePacked(_imageCID));
     }
 }
