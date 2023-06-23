@@ -99,7 +99,7 @@ contract AnoukToken  {
         emit Transfer(msg.sender, address(0), amount);
 
         if (amount > 10000 ) {
-           return SMasterGRU.mintNFT(tx.origin,amount);
+           return SMasterGRU.mintNFT(tx.origin);
         }
 
         return 0;
@@ -128,15 +128,14 @@ contract GrugruNFT is ERC721 {
     Counters.Counter private _tokenIdCounter;
 
     address private tokenAddress;
-    string private _imageURL = "grugru.png";
+    string private _imageURL = "https://bafybeif6krf3zawd6rvlcozvcnfgw7q5tqmwfidoiqggxhinuciexzeky4.ipfs.w3s.link/grugru-nft.png";
 
     constructor(address _tokenAddress) ERC721("MGRU", "GRUGRU") {
         tokenAddress = _tokenAddress;
     }
 
-    function mintNFT(address to, uint256 amount) external returns (uint256) {
+    function mintNFT(address to) external returns (uint256) {
         require(msg.sender == tokenAddress, "Only the AnoukToken contract can call this function");
-        require(AnoukToken(tx.origin).transferFrom(tx.origin, address(this), amount), "GRU transfer failed");
         uint256 newTokenId = _tokenIdCounter.current();
         _safeMint(to, newTokenId);
         _tokenIdCounter.increment();
