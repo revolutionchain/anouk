@@ -27,7 +27,7 @@ contract AnoukToken  {
     uint256 private _initialSupply = 21000000000 * 10 ** uint256(decimals);
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
-    address private _owner;    
+    address public _owner;    
 
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
